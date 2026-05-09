@@ -1,11 +1,42 @@
 import Recipe from "../models/Recipe.js";
 
 export const getAllRecipes = async (req, res) => {
-
-    // Esto es para enviar al front, si es ok: true mandas el 200 y si es ok: false el 500 o lo que quieras
     try {
-        const recipes = await Recipe.find();
+        const { dietType, difficulty, maxCalories, search, tag } = req.query; // Sacamos filtros desde la URL. req.query contiene parámetros tipo: /recipes?dietType=vegan&difficulty=easy
 
+        const filters = {}; // Creamos un objeto vacío donde iremos guardando filtros dinámicamente
+
+        // Si el usuario mandó dietType -> ?dietType=vegan
+        if (dietType) {
+            filters.dietType = dietType; // Entonces añadimos el filtro
+        }
+
+        if (difficulty) {
+            filters.difficulty = difficulty;
+        }
+
+        // Si mandaron máximo de calorías -> ?maxCalories=500
+        if (maxCalories) {
+            filters.calories = { $lte: Number(maxCalories) }; // $lte significa: calorías menores o iguales que 500. Number() convierte string a número
+        }
+
+        // Si mandaron una etiqueta -> ?tag=fitness
+        if (tag) {
+            filters.tags = tag;
+        }
+
+        // Si mandan un texto -> ?search=pollo
+        if (search) {
+            // $ or -> cumple una condición O la otra
+            filters.$or = [
+                { title: { $regex: search, $options: "i" } }, // Busca coincidencias en el título. $regex: search Hace búsqueda parcial tipo: contiene "pollo". $options: "i" La i significa: insensitive O sea: Pollo pollo POLLO todo coincide
+                { description: { $regex: search, $options: "i" } }, // Busca dentro de la descripción. Buscas recetas en Mongo usando todos los filtros construidos. Ejem: { dietType: "vegan", calories: { $lte: 500 }
+            ];
+        }
+
+        const recipes = await Recipe.find(filters);
+
+        // Esto es para enviar al front, si es ok: true mandas el 200 y si es ok: false el 500 o lo que quieras
         res.status(200).json({
             ok: true,
             recipes,
