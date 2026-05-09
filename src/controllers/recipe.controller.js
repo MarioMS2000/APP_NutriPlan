@@ -72,3 +72,63 @@ export const createRecipe = async (req, res) => {
 
     }
 };
+
+export const updateRecipe = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        //  new: true -> devuélveme el documento actualizado (sin eso Mongo devuelve el documento sin actualizar)
+        // runValidators: true -> aplica las validaciones del schema también al actualizar. Por defecto, findByIdAndUpdate NO valida igual que .create(). Entonces podrías guardar cosas inválidas
+        const recipe = await Recipe.findByIdAndUpdate(id, req.body, {
+            new: true,
+            runValidators: true,
+        });
+
+        if (!recipe) {
+            return res.status(404).json({
+                ok: false,
+                message: "Receta no encontrada",
+            });
+        }
+
+        res.status(200).json({
+            ok: true,
+            message: "Receta actualizada correctamente",
+            recipe,
+        });
+
+    } catch (error) {
+        res.status(500).json({
+            ok: false,
+            message: "Error al actualizar la receta",
+            error: error.message,
+        });
+    }
+};
+
+export const deleteRecipe = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const recipe = await Recipe.findByIdAndDelete(id);
+
+        if (!recipe) {
+            return res.status(404).json({
+                ok: false,
+                message: "Receta no encontrada",
+            });
+        }
+
+        res.status(200).json({
+            ok: true,
+            message: "Receta eliminada correctamente",
+        });
+
+    } catch (error) {
+        res.status(500).json({
+            ok: false,
+            message: "Error al eliminar la receta",
+            error: error.message,
+        });
+    }
+};
