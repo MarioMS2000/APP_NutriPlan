@@ -5,6 +5,7 @@ import cors from "cors"; // Permite que el frontend pueda llamar al backend sin 
 // Import Routes
 import authRoutes from "./routes/auth.routes.js";
 import nutritionProfileRoutes from "./routes/nutritionProfile.routes.js";
+import recipeRoutes from "./routes/recipe.routes.js";
 
 // Creo la app
 const app = express(); // Inicializo Express
@@ -16,7 +17,7 @@ app.use(express.json()); //Activas JSON en requests -> cuando me manden JSON en 
 // Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/nutrition-profile", nutritionProfileRoutes);
-
+app.use("/api/recipes", recipeRoutes);
 
 // http://localhost:3000/api/health
 app.get("/api/health", (req, res) => {

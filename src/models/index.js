@@ -1,6 +1,6 @@
 import sequelize from "../config/postgres.js"; // Importamos la conexión
 import User from "./User.js"; // Importamos el Modelo
-import NutritionProfile from "./NutritionProfile.js"; // Modelo
+import NutritionProfile from "./NutritionProfile.js"; // Importamos el Modelo
 
 // Relacion un user a un NutritionProfile
 User.hasOne(NutritionProfile, {
