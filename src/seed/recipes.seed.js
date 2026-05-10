@@ -221,7 +221,16 @@ const seedRecipes = async () => {
     try {
         await mongoose.connect(process.env.MONGO_URI);
 
-        await Recipe.insertMany(recipes);
+        for (const recipe of recipes) {
+            await Recipe.findOneAndUpdate(
+                { title: recipe.title },
+                recipe,
+                {
+                    upsert: true,
+                    new: true,
+                }
+            );
+        }
 
         console.log("Recipes inserted successfully");
 
