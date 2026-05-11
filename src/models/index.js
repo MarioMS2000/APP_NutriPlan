@@ -3,6 +3,7 @@ import sequelize from "../config/postgres.js"; // Importamos la conexión
 import User from "./User.js";
 import NutritionProfile from "./NutritionProfile.js";
 import Favorite from "./Favorite.js";
+import WeeklyPlan from "./WeeklyPlan.js";
 
 // Relacion un user a un NutritionProfile
 User.hasOne(NutritionProfile, {
@@ -26,9 +27,18 @@ Favorite.belongsTo(User, {
     foreignKey: "userId",
 });
 
+User.hasMany(WeeklyPlan, {
+    foreignKey: "userId",
+    onDelete: "CASCADE",
+});
+
+WeeklyPlan.belongsTo(User, {
+    foreignKey: "userId",
+});
+
 const syncDatabase = async () => {
     await sequelize.sync({ alter: true }); // sync() -> crea las tablas que falten en la base de datos según mis modelos | { alter: true } -> si la tabla ya existe, compárala con el modelo y ajústala
     console.log("Base de datos sincronizada");
 };
 
-export { sequelize, User, NutritionProfile, Favorite, syncDatabase };
+export { sequelize, User, NutritionProfile, Favorite, WeeklyPlan, syncDatabase };

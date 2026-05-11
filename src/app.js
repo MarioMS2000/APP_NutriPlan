@@ -7,6 +7,7 @@ import authRoutes from "./routes/auth.routes.js";
 import nutritionProfileRoutes from "./routes/nutritionProfile.routes.js";
 import recipeRoutes from "./routes/recipe.routes.js";
 import favoriteRoutes from "./routes/favorite.routes.js";
+import weeklyPlanRoutes from "./routes/weeklyPlan.routes.js";
 
 // Creo la app
 const app = express(); // Inicializo Express
@@ -20,6 +21,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/nutrition-profile", nutritionProfileRoutes);
 app.use("/api/recipes", recipeRoutes);
 app.use("/api/favorites", favoriteRoutes);
+app.use("/api/weekly-plan", weeklyPlanRoutes);
 
 // http://localhost:3000/api/health
 app.get("/api/health", (req, res) => {
