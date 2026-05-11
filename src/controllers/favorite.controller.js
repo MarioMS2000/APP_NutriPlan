@@ -103,3 +103,28 @@ export const removeFavorite = async (req, res) => {
         });
     }
 };
+
+export const checkFavorite = async (req, res) => {
+    try {
+        const { recipeId } = req.params;
+
+        const favorite = await Favorite.findOne({
+            where: {
+                userId: req.user.id,
+                recipeId,
+            },
+        });
+
+        // isFavorite: !!favorite -> objeto → true null → false
+        res.status(200).json({
+            ok: true,
+            isFavorite: !!favorite,
+        });
+    } catch (error) {
+        res.status(500).json({
+            ok: false,
+            message: "Error al comprobar favorito",
+            error: error.message,
+        });
+    }
+};
