@@ -12,8 +12,18 @@ import weeklyPlanRoutes from "./routes/weeklyPlan.routes.js";
 // Creo la app
 const app = express(); // Inicializo Express
 
-
-app.use(cors()); // Activas CORS, permite peticiones desde otros orígenes. Para que el frontend pueda conectarse al backend
+// Para producción
+app.use(
+    cors({
+        origin: [
+            "http://localhost:5173",
+            process.env.FRONTEND_URL,
+        ],
+        credentials: true,
+    })
+);
+//Para desarrollo
+//app.use(cors()); // Activas CORS, permite peticiones desde otros orígenes. Para que el frontend pueda conectarse al backend
 app.use(express.json()); //Activas JSON en requests -> cuando me manden JSON en el body, conviértelo automáticamente a objeto JS
 
 // Routes
